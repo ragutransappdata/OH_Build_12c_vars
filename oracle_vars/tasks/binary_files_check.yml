@@ -1,0 +1,18 @@
+--- # check for the binary files, if exists go for next task 
+- name: Ansible check zip files available for 11204.
+  stat:
+    path: "{{ oracle_home_base_dir }}/{{ version }}"
+#  register: files_exists_OH
+
+- debug:
+    msg: "Software is installed"
+#  when: files_exists_OH.stat.exists and files_exists_OH.stat.isdir
+
+- name: Check that Inventory is exist
+  stat:
+    path: {{ inventory_location }} 
+  register: files_exists_OI
+
+- debug:
+    msg: "oraInventory is exist"
+#  when: files_exists_OI.stat.exists and files_exists_OI.stat.isdir

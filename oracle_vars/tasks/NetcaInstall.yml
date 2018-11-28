@@ -1,0 +1,6 @@
+- name: NetcaInstall
+  become_user: oracle
+  shell: "{{ build_location }}/NetcaInstall.sh {{ SID }} {{ AppsVer }}"
+
+- debug:
+     msg: "NetcaInstall Installed Successfully"	 

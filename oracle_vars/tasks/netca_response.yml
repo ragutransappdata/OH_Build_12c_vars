@@ -1,0 +1,26 @@
+---
+- name: Generate response Netca
+  template: src={{ groupname }}_{{ version }}netca.rsp.j2 dest=/tmp/{{ AppsVer }}netca.rsp
+
+- name: Ensure parameters in response file - netca response file
+  lineinfile:
+    path: /tmp/{{ AppsVer }}netca.rsp
+    regexp: ^({{ item.name }})=
+    line: '{{ item.name }}={{ item.value }}'
+    backrefs: true
+    state: present
+  with_items:
+  - name: LOG_FILE
+    value: '{{ log_file }}'
+  - name: INSTALL_TYPE
+    value: '{{ install_type }}'
+  - name: LISTENER_NUMBER
+    value: '{{ listener_number }}'
+  - name: LISTENER_NAMES
+    value: '{{ listener_names }}'
+  - name: LISTENER_PROTOCOLS
+    value: '{{ listener_protocols }}'
+  - name: LISTENER_START
+    value: '{{ listener_start }}'
+  - name: NAMING_METHODS
+    value: '{{ naming_methods }}' 

@@ -1,0 +1,7 @@
+- name: ListenerStop
+  become_user: oracle
+  shell: "{{ build_location }}/ListenerStop.sh {{ SID }} {{ AppsVer }} {{ ListenerName }}"
+  register: ListenerStop
+
+- debug:
+     msg: "ListenerStop"

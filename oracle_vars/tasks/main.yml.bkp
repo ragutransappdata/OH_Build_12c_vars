@@ -1,0 +1,58 @@
+- include_vars: "{{ version }}vars.yml"
+
+- include: response_software_install.yml
+  tags: install oracle software only
+
+###############################################
+
+- include: netca_response.yml
+  tags: netca response validation
+
+###############################################
+
+- include: dbca_response.yml
+  tags: dbca response validation
+
+###############################################
+
+- name: looping
+  stat:
+    path: /u04/oracle/product/database/{{ version }}
+  register: files_exists_OH
+
+- debug:
+
+- include: RunInstaller.yml
+  tags: invoke runinstaller
+  when: not files_exists_OH.stat.exists
+
+- name: files_exists_OH revalidation
+  stat:
+    path: /u04/oracle/product/database/{{ version }}
+  register: files_exists_OH
+
+###############################################
+
+- name: netca looping
+  stat:
+    path: /u04/oracle/product/database/{{ version }}
+  register: files_exists_OH
+
+- debug:
+
+- include: NetcaInstall.yml
+  tags: invoke netca
+  when: files_exists_OH.stat.exists
+
+##########################################
+
+- name: dbca looping
+  stat:
+    path: /u04/oracle/product/database/{{ version }}
+  register: files_exists_OH
+
+- debug:
+
+- include: DbcaInstall.yml 
+  tags: dbca database
+  when: files_exists_OH.stat.exists
