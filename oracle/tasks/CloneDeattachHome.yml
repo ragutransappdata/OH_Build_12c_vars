@@ -1,0 +1,8 @@
+- name: CloneDeattachHome
+  become_user: oracle
+  shell: cd {{ oracle_home_base_dir }}/{{ AppsVer }}/oui/bin ; ./runInstaller.sh -silent -detachHome  ORACLE_HOME="{{ oracle_home_base_dir }}"/"{{ AppsVer }}"  ORACLE_HOME_NAME={{ oracle_home_name }}
+  register: CloneDeattachHome
+
+- debug:
+     msg: "CloneDeattachHome"
+

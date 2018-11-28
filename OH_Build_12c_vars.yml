@@ -1,0 +1,5 @@
+--- # unzip setup
+- hosts: [12c] 
+  become: yes
+  roles:
+     - oracle_vars

@@ -1,0 +1,7 @@
+- name: RunInstaller
+  become_user: oracle
+  shell: "{{ build_location }}/RunInstaller.sh {{ SID }} {{ AppsVer }}"
+  register: RunInstaller
+
+- debug:
+     msg: "RunInstaller invoked"

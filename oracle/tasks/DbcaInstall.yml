@@ -1,0 +1,8 @@
+- name: DbcaInstall
+  become_user: oracle
+  shell: "{{ build_location }}/DbcaInstall.sh {{ SID }} {{ AppsVer }}"
+#  register: DbcaInstall
+
+- debug:
+     msg: "DbcaInstall Installed Successfully"
+

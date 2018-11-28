@@ -1,0 +1,46 @@
+--- #Generate the dbca response file for db creation
+- name: Generate the dbca response file for db creation
+  template: src={{ groupname }}_{{ version }}dbca.rsp.j2  dest=/tmp/{{ AppsVer }}dbca.rsp
+
+- name: Ensure parameters in response file - dbca response file
+  lineinfile:
+    path: /tmp/{{ AppsVer }}dbca.rsp
+    regexp: ^({{ item.name }})=
+    line: '{{ item.name }}={{ item.value }}'
+    backrefs: true
+    state: present
+  with_items:
+  - name: OPERATION_TYPE
+    value: '{{ operation_type }}'
+  - name: GDBNAME
+    value: '{{ gdb_name }}'
+  - name: DATABASECONFTYPE
+    value: '{{ database_conftype }}'
+  - name: SID
+    value: '{{ sid }}'
+  - name: TEMPLATENAME
+    value: '{{ template_name }}'
+  - name: SYSPASSWORD
+    value: '{{ sys_password }}'
+  - name: SYSTEMPASSWORD
+    value: '{{ system_password }}'
+  - name: EMCONFIGURATION
+    value: '{{ em_configuration }}'
+  - name: DATAFILEDESTINATION
+    value: '{{ datafile_destination }}'
+  - name: STORAGETYPE
+    value: '{{ storage_type }}'
+  - name: CHARACTERSET
+    value: '{{ character_set }}'
+  - name: NATIONALCHARACTERSET
+    value: '{{ national_characterset }}'
+  - name: LISTENERS
+    value: '{{ listeners }}'
+  - name: SAMPLESCHEMA
+    value: '{{ sample_schema }}'
+  - name: MEMORYPERCENTAGE
+    value: '{{ memory_percentage }}'
+  - name: DATABASETYPE
+    value: '{{ database_type }}'
+  - name: TOTALMEMORY
+    value: '{{ total_memory }}'	

@@ -1,0 +1,42 @@
+#Run installer parameters should be in master
+
+user_name: oracle
+unix_group_name: oinstall
+oracle_hostname: dgprim2
+inventory_location: /u03/app/oracle/oraInventory
+oracle_home: /u04/oracle/product/database/12102
+oracle_base: /u04/oracle
+oracle_home_base_dir: /u04/oracle/product/database
+oracle_home_name: OraDB12Home1
+
+#Dbca parameters should be in master
+
+operation_type: createDatabase
+gdb_name: dg731211.transappdata.com
+database_conftype: SI
+sid: dg731211
+template_name: General_Purpose.dbc
+sys_password: oracle123
+system_password: oracle123
+em_configuration: NONE
+datafile_destination: /u03/oracle/oradata/
+storage_type: FS
+character_set: US7ASCII
+national_characterset: UTF8
+listeners: listener12c
+sample_schema: TRUE
+memory_percentage: 10
+database_type: MULTIPURPOSE
+total_memory: 800
+
+#Netca parameters should be in master
+
+log_file: /tmp/netca.log
+install_type: custom
+listener_number: 1
+listener_names: DG731211
+listener_protocols: TCP;1524
+listener_start: DG731211
+naming_methods: TNSNAMES,ONAMES,HOSTNAME
+
+

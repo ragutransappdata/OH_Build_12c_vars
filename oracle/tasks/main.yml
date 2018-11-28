@@ -1,0 +1,105 @@
+#- include_vars: {{ version }}vars.yml
+#- include_vars: 12102vars.yml
+- include_vars: 11204vars.yml
+
+- include: response_software_install.yml
+  tags: install oracle software only
+
+###############################################
+
+- include: netca_response.yml
+  tags: netca response validation
+
+###############################################
+
+- include: dbca_response.yml
+  tags: dbca response validation
+
+###############################################
+
+- name: check the oracle_home directory 
+  stat:
+    path: "{{ oracle_home_base_dir }}/{{ version }}"
+  register: files_exists_OH
+
+- debug:
+    msg: oracle home for {{ AppsVer }} is populated.
+
+- name: Check for inventory dir existance
+  stat:
+    path: "{{ inventory_location }}/ContentsXML/inventory.xml"
+  ignore_errors: yes
+  register: files_exists_OI
+  
+- debug:
+    msg: oracle inventory location for {{ AppsVer }} is populated.
+
+- name: Check Inventory entry
+  shell: grep {{ oracle_home_name }} {{ inventory_location }}/ContentsXML/inventory.xml > /dev/null
+  ignore_errors: yes
+  register: inventory_exists
+
+- include: RunInstaller.yml
+  tags: invoke runinstaller
+  when: not files_exists_OH.stat.exists  and  inventory_exists.rc != 0 
+  
+- include: CloneDeattachHome.yml
+  tags: DeattachHome
+  ignore_errors: yes
+  when: files_exists_OH.stat.exists and files_exists_OI.stat.exists and inventory_exists.rc == 0 
+
+- name: Check Inventory entry
+  shell: grep {{ oracle_home_name }} {{ inventory_location }}/ContentsXML/inventory.xml > /dev/null
+  ignore_errors: yes
+  register: inventory_exists
+
+- debug:
+    msg: inventory for {{ AppsVer }} 
+   
+- include: RunInstaller.yml
+  tags: invoke runinstaller
+  ignore_errors: yes
+  when: not files_exists_OH.stat.exists  and CloneDeattachHome.rc == 0  and inventory_exists.rc == 0
+
+
+###############################################
+
+
+- name: Check Listener.ora
+  stat:
+    path: "{{ oracle_home }}/network/admin/listener.ora" 
+  register: listenerfile_available_exists 
+  when: files_exists_OH.stat.exists
+
+
+#- include: NetcaInstall.yml
+#  tags: invoke netca
+#  when: listenerfile_available_exists.stat.exists
+
+
+##########################################
+
+- name: check the oracle_home directory 
+  stat:
+    path: "{{ oracle_home_base_dir }}/{{ version }}"
+  register: files_exists_OH
+
+- name: check the data file location
+  stat:
+    path: "{{ datafile_destination }}/{{ version }}"
+  register: datafile_location_populated
+
+- debug:
+    msg: datafile location is populated.
+
+- name: oratab checks
+  shell: grep {{ sid }} /etc/oratab > /dev/null
+  ignore_errors: yes
+  register: oratab_entry_exists
+  
+- debug:
+    msg: check oratab entry.
+
+- include: DbcaInstall.yml 
+  tags: dbca database
+  when: files_exists_OH.stat.exists and not datafile_location_populated.stat.exists and oratab_entry_exists.rc != 0

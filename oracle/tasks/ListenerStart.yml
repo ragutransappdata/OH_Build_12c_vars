@@ -1,0 +1,5 @@
+- name: ListenerStart
+  become_user: oracle
+  shell: "{{ build_location }}/ListenerStart.sh {{ SID }} {{ AppsVer }} {{ ListenerName }}"
+- debug:
+     msg: "ListenerStart"
